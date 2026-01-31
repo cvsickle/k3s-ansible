@@ -1,7 +1,7 @@
 ---
 - name: Create manifests directory on first master
   ansible.builtin.file:
-    path: /var/lib/rancher/k3s/server/manifests
+    path: /mnt/k3s/etcd/server/manifests
     state: directory
     owner: root
     group: root
@@ -11,7 +11,7 @@
 - name: Download vip cloud provider manifest to first master
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/kube-vip/kube-vip-cloud-provider/{{ kube_vip_cloud_provider_tag_version | default('main') }}/manifest/kube-vip-cloud-controller.yaml # noqa yaml[line-length]
-    dest: /var/lib/rancher/k3s/server/manifests/kube-vip-cloud-controller.yaml
+    dest: /mnt/k3s/etcd/server/manifests/kube-vip-cloud-controller.yaml
     owner: root
     group: root
     mode: "0644"
@@ -20,7 +20,7 @@
 - name: Copy kubevip configMap manifest to first master
   ansible.builtin.template:
     src: kubevip.yaml.j2
-    dest: /var/lib/rancher/k3s/server/manifests/kubevip.yaml
+    dest: /mnt/k3s/etcd/server/manifests/kubevip.yaml
     owner: root
     group: root
     mode: "0644"

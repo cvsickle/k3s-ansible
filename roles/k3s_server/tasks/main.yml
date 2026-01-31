@@ -81,21 +81,21 @@
 
 - name: Wait for node-token
   ansible.builtin.wait_for:
-    path: /var/lib/rancher/k3s/server/node-token
+    path: /mnt/k3s/etcd/server/node-token
 
 - name: Register node-token file access mode
   ansible.builtin.stat:
-    path: /var/lib/rancher/k3s/server
+    path: /mnt/k3s/etcd/server
   register: p
 
 - name: Change file access node-token
   ansible.builtin.file:
-    path: /var/lib/rancher/k3s/server
+    path: /mnt/k3s/etcd/server
     mode: g+rx,o+rx
 
 - name: Read node-token from master
   ansible.builtin.slurp:
-    src: /var/lib/rancher/k3s/server/node-token
+    src: /mnt/k3s/etcd/server/node-token
   register: node_token
 
 - name: Store Master node-token
@@ -104,7 +104,7 @@
 
 - name: Restore node-token file access
   ansible.builtin.file:
-    path: /var/lib/rancher/k3s/server
+    path: /mnt/k3s/etcd/server
     mode: "{{ p.stat.mode }}"
 
 - name: Create directory .kube
@@ -152,13 +152,13 @@
 
 - name: Get contents of manifests folder
   ansible.builtin.find:
-    paths: /var/lib/rancher/k3s/server/manifests
+    paths: /mnt/k3s/etcd/server/manifests
     file_type: file
   register: k3s_server_manifests
 
 - name: Get sub dirs of manifests folder
   ansible.builtin.find:
-    paths: /var/lib/rancher/k3s/server/manifests
+    paths: /mnt/k3s/etcd/server/manifests
     file_type: directory
   register: k3s_server_manifests_directories
 
